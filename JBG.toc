@@ -1,0 +1,8 @@
+## Interface: 90002
+## Author: J
+## Version: 0.1
+## Title: JBG
+
+embed.xml
+JBG.lua
+ScoreCalcs.lua
