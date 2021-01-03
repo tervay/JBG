@@ -21,11 +21,6 @@ function JBG:BATTLEGROUND_POINTS_UPDATE(ally_string, horde_string, ...)
     real_A, max_A = GetBattlegroundPoints(ALLIANCE)
     real_H, max_H = GetBattlegroundPoints(HORDE)
 
-    if real_A >= max_A or real_H >= max_H then
-        ally_string:SetAlpha(0)
-        horde_string:SetAlpha(0)
-    end
-
     -- https://wow.gamepedia.com/UiMapID
     uiMapID = C_Map.GetBestMapForUnit("player")
 
@@ -34,7 +29,7 @@ function JBG:BATTLEGROUND_POINTS_UPDATE(ally_string, horde_string, ...)
 
     rates = {
         [EOTS] = {[0] = 0, [1] = 1, [2] = 2, [3] = 5, [4] = 10},
-        [AB] = {[0] = 0, [1] = 1, [2] = 1.5, [3] = 2, [4] = 3.5, [5] = 30},
+        [AB] = {[0] = 0, [1] = 2, [2] = 3, [3] = 4, [4] = 7, [5] = 60},
         [BFG] = {[0] = 0, [1] = 10 / 9, [2] = 10 / 3, [3] = 30},
 
         -- I can't find the tick rates for DWG so I'm assuming same as AB
@@ -75,8 +70,20 @@ function JBG:BATTLEGROUND_POINTS_UPDATE(ally_string, horde_string, ...)
             end
         end
 
-        ally_string:SetText(lowest_A)
-        horde_string:SetText(lowest_H)
+        if ally_string == 0 or ally_string == 100 then
+            ally_string:SetAlpha(0)
+            horde_string:SetAlpha(0)
+        else
+            ally_string:SetText(lowest_A)
+            horde_string:SetText(lowest_H)
+        end
+    end
+end
+
+function JBG:ZONE_CHANGED_NEW_AREA(ally_string, horde_string, ...)
+    if not C_PvP.IsBattleground() then
+        ally_string:SetAlpha(0)
+        horde_string:SetAlpha(0)
     end
 end
 
@@ -102,3 +109,4 @@ end);
 
 frame:RegisterEvent("BATTLEGROUND_POINTS_UPDATE")
 frame:RegisterEvent("BATTLEGROUND_OBJECTIVES_UPDATE")
+frame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
