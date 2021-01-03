@@ -21,13 +21,16 @@ function JBG:BATTLEGROUND_POINTS_UPDATE(ally_string, horde_string, ...)
     real_A, max_A = GetBattlegroundPoints(ALLIANCE)
     real_H, max_H = GetBattlegroundPoints(HORDE)
 
+    if real_A >= max_A or real_H >= max_H then
+        ally_string:SetAlpha(0)
+        horde_string:SetAlpha(0)
+    end
+
     -- https://wow.gamepedia.com/UiMapID
     uiMapID = C_Map.GetBestMapForUnit("player")
 
     -- Zones
     local AB, BFG, EOTS, DWG1, DWG2 = 1366, 275, 112, 519, 1576
-
-    -- JBG:Print(uiMapID)
 
     rates = {
         [EOTS] = {[0] = 0, [1] = 1, [2] = 2, [3] = 5, [4] = 10},
@@ -41,6 +44,7 @@ function JBG:BATTLEGROUND_POINTS_UPDATE(ally_string, horde_string, ...)
 
     if (uiMapID == AB) or (uiMapID == BFG) or (uiMapID == EOTS) or
         (uiMapID == DWG2) or (uiMapID == DWG1) then
+
         ally_string:SetAlpha(1)
         horde_string:SetAlpha(1)
 
@@ -56,16 +60,13 @@ function JBG:BATTLEGROUND_POINTS_UPDATE(ally_string, horde_string, ...)
                 fake_H = fake_H + rates[uiMapID][bases_H]
 
                 if (fake_A >= max_A) and (fake_H >= max_H) then
-                    -- JBG:Print("Tie!")
                     break
                 elseif fake_A >= max_A then
-                    -- JBG:Print(string.format("Alliance wins with %s", bases_A))
                     if bases_A < lowest_A then
                         lowest_A = bases_A
                     end
                     break
                 elseif fake_H >= max_H then
-                    -- JBG:Print(string.format("Horde wins with %s", bases_H))
                     if bases_H < lowest_H then
                         lowest_H = bases_H
                     end
@@ -74,7 +75,6 @@ function JBG:BATTLEGROUND_POINTS_UPDATE(ally_string, horde_string, ...)
             end
         end
 
-        -- t:SetText(string.format("A: %s, H: %s", lowest_A, lowest_H))
         ally_string:SetText(lowest_A)
         horde_string:SetText(lowest_H)
     end
