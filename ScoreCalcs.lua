@@ -12,6 +12,7 @@ function JBG:BATTLEGROUND_OBJECTIVES_UPDATE(...)
     -- end
 end
 
+
 function JBG:GetBattlegroundCapStatuses(uiMapID)
     --
     -- JBG:Print(self.poi_info)
